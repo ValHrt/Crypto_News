@@ -12,13 +12,7 @@ NEWS_API = os.environ.get("NEWS_API")
 
 CRYPTO_NAME = ["bitcoin", "ethereum", "ripple"]
 
-# TELEGRAM_API_ID = int(os.environ.get("TELEGRAM_API_ID"))
-# TELEGRAM_API_HASH = str(os.environ.get("TELEGRAM_API_HASH"))
-# BOT_TOKEN = str(os.environ.get("BOT_TOKEN"))
-# TELEGRAM_ENDPOINT = f"https://api.telegram.org/bot{TELEGRAM_API}/sendMessage"
 CHAT_ID = int(os.environ.get("CHAT_ID"))
-# print(TELEGRAM_API_ID, TELEGRAM_API_HASH, BOT_TOKEN, CHAT_ID)
-
 APP_TELEGRAM_API_ID = int(os.environ.get("APP_TELEGRAM_API_ID"))
 APP_TELEGRAM_API_HASH = os.environ.get("APP_TELEGRAM_API_HASH")
 
@@ -60,8 +54,7 @@ news_text = []
 
 for key in news_data.keys():
     news_text.append(f'Titre : {news_data[key]["title"]}\nDescription : {news_data[key]["description"]}'
-                     f'\nLien article : <img src="{news_data[key]["url"]}" alt="{news_data[key]}">\n'
-                     f'{news_data[key]["urlToImage"]} alt=\nSource: '
+                     f'\nLien article : {news_data[key]["url"]}\nSource: '
                      f'{news_data[key]["source"]["name"]}\n\n')
 
 # news_text = "".join(news_text)
@@ -96,30 +89,24 @@ def get_emoji(key: str, target: str):
 # print(final_data)
 
 for key in final_data.keys():
-    data_text.append(f"{key} :\nPrix actuel : {round(final_data[key]['price'], ndigits=2)} €\nVariation sur 24h : "
+    data_text.append(f"<b>{key}</b> :\nPrix actuel : {round(final_data[key]['price'], ndigits=2)} €\nVariation sur 24h : "
                      f"{get_emoji(key, 'percent_change_24h')}{round(final_data[key]['percent_change_24h'], ndigits=2)}%"
                      f"\nVariation sur une semaine : {get_emoji(key, 'percent_change_7d')}"
                      f"{round(final_data[key]['percent_change_7d'], ndigits=2)}%\n")
 
 data_text = sorted(data_text, key=str.lower)
 
-final_text = []
-
-for (data, news) in zip(data_text, news_text):
-    tmp = f"{data}{news}"
-    final_text.append(tmp)
-
-final_text = "".join(final_text)
-print(final_text)
-
-
 # Telegram Bot configuration :
 
 client = TelegramClient("Valby_Bot", APP_TELEGRAM_API_ID, APP_TELEGRAM_API_HASH)
 
+for (data, news) in zip(data_text, news_text):
+    tmp = f"{data}{news}"
+    "".join(tmp)
 
-async def main():
-    await client.send_message(CHAT_ID, final_text, parse_mode="HTML")
+    async def main():
+        await client.send_message(CHAT_ID, tmp, parse_mode="HTML")
 
-with client:
-    client.loop.run_until_complete(main())
+    with client:
+        client.loop.run_until_complete(main())
+    time.sleep(1)
