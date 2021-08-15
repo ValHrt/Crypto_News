@@ -16,7 +16,7 @@ CHAT_ID = int(os.environ.get("CHAT_ID"))
 APP_TELEGRAM_API_ID = int(os.environ.get("APP_TELEGRAM_API_ID"))
 APP_TELEGRAM_API_HASH = os.environ.get("APP_TELEGRAM_API_HASH")
 
-today = (dt.datetime.today() - dt.timedelta(days=1)).strftime("%Y-%m-%d")
+today = dt.datetime.today().strftime("%Y-%m-%d")
 
 parameters = {
     "slug": ",".join(CRYPTO_NAME),
@@ -34,7 +34,7 @@ news_data = {}
 
 for index, name in enumerate(CRYPTO_NAME):
     newsapi_params = {
-        "qInTitle": CRYPTO_NAME[index],
+        "qInTitle": {CRYPTO_NAME[index]},
         "from": today,
         "sortBy": "popularity",
         "pageSize": 1,
